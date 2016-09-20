@@ -1,27 +1,28 @@
+<?php
+require('conexion.php');
+
+$conn = dbConnect();
+$sql = 'SELECT * FROM recurso';
+$result = $conn->query($sql);
+$rows = $result->fetchAll();
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
  <head>
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Cotizacion</title>
+  <title>Crear Partida</title>
   
   <!-- Default Styles (DO NOT TOUCH) -->
   <link rel="stylesheet" href="lib/css/font-awesome.min.css">
   <link rel="stylesheet" href="lib/css/bootstrap.min.css">
   <link rel="stylesheet" href="lib/css/fonts.css">
-  <link rel="stylesheet" href="lib/css/soft-admin.css"/>
+  <link type="text/css" rel="stylesheet" href="lib/css/soft-admin.css"/>
   
   <!-- Adjustable Styles -->
-  <link type="text/css" rel="stylesheet" href="lib/css/morris.css"/>
-  <link type="text/css" rel="stylesheet" href="lib/css/colorbox.css"/>
-  <link type="text/css" rel="stylesheet" href="lib/css/icheck.css">
-
-  <!-- ADDITIONAL THEMES
-  <link rel="stylesheet" href="lib/css/soft-theme-ocean.css"/> // SIMPLE OCEAN THEME
-  <link rel="stylesheet" href="lib/css/soft-theme-dark.css"/> // DARK THEME
-  <link rel="stylesheet" href="lib/css/soft-theme-blue.css"/> // BLUE THEME
-  <link rel="stylesheet" href="lib/css/soft-theme-light.css"/> // LIGHT THEME
-  <link rel="stylesheet" href="lib/css/soft-theme-fixed.css"/> // AFFIXES YOUR SIDEBAR AND NAVIGATION
-  -->
+  <link type="text/css" rel="stylesheet" href="lib/css/DT_bootstrap.css"/>
+  <link type="text/css" rel="stylesheet" href="lib/css/icheck.css?v=1.0.1">
   
   <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!--[if lt IE 9]>
@@ -99,15 +100,15 @@
       </div>
       <div class="accordion-group">
        <div class="accordion-heading">
-        <a class="sbtn sbtn-default active" data-toggle="collapse" href="#c-forms">
+        <a class="sbtn btn-default" data-toggle="collapse" href="#c-tables">
          <span class="fa fa-pencil-square-o"></span>
          &nbsp;&nbsp;Partidas
          <span class="caret"></span>
         </a>
        </div>
-       <div id="c-forms" class="accordion-body collapse"><div class="accordion-inner">
-        <a href="crear_partida.html" class="sbtn sbtn-default">Crear Partida</a>
-        <a href="ver_partida.html" class="sbtn sbtn-default">Ver Partida</a>
+       <div id="c-tables" class="accordion-body collapse in"><div class="accordion-inner">
+        <a href="crear_partida.html" class="sbtn sbtn-default active">Crear Partida</a>
+        <a href="table_datatables.html" class="sbtn sbtn-default">Ver Partida</a> 
        </div></div>
       </div>
       <div class="accordion-group">
@@ -316,52 +317,74 @@
     <!-- BEGIN PAGE CONTENT -->
     <div class="content">
      <div class="page-h1">
-      <h1>Nueva Cotización <small>// Ingrese una nueva cotización</small></h1>
+      <h1>Nueva Partida <small>// Ingrese datos de la partida</small></h1>
      </div> 
      <div class="col-md-12">
        <div class="alert alert-info" style="margin-bottom:0px;margin-top:10px;">
        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-       <span class="icon icon-exclamation-sign"></span> <strong>Ingrese los datos de la cotizacion!</strong>
+       <span class="icon icon-exclamation-sign"></span> <strong>Verifique antes de aceptar!</strong>
        </div>
      </div>
      <div class="tb1">
-      <div class="col-md-11">
+      <div class="col-md-12">
        <div class="wdgt">
-        <div class="wdgt-header">Datos Generales</div>
-        <div class="wdgt-body" style="padding-bottom:10px;">
-         <form role="form">
-          <div class="form-group">
-           <label>Nombre</label>
-           <input type="text" class="form-control" placeholder="Nombre Cotización">
-          </div>
-          <div class="form-group">
-           <label>Detalle</label>
-           <textarea class="form-control form-dark" rows="3"></textarea>
-          </div>
-          <div class="form-group">
-           <label for="disabledSelect">Categoria</label>
-           <select id="disabledSelect" class="form-control form-primary">
-            <option>Cat 1</option>
-            <option>Cat 2</option>
-            <option>Cat 3</option>
-           </select>
-          </div>
-         </form>
+       <form role="form">
+        <div class="form-group">
+         <label>Nombre</label>
+         <input type="text" class="form-control" placeholder="Nombre Cotización">
         </div>
+       </form>
        </div>
-      </div>
-     </div> 
-     <div class="tb1">
-      <div class="col-md-11">
-       <div class="wdgt">
+      </div> 
+
+      <div class="col-md-12">
+       <div class="wdgt wdgt-primary"  hide-btn="true">
         <div class="wdgt-header">Agregar Recursos</div>
-        <div class="wdgt-body" style="padding-bottom:10px;">
-         
+        <div class="wdgt-body" style="padding-bottom:0px; padding-top:10px;">
+         <table cellpadding="0" cellspacing="0" border="0" class="datatable table table-striped table-bordered">
+     <thead>
+      <tr>
+       <th></th>
+       <th>Codigo</th>
+       <th>Nombre</th>
+       <th>Unidad</th>
+       <th>Costo Directo</th>
+       <th>IVA</th>
+       <th>Total</th>
+       <th>Fecha</th>
+       <th>Proveedor</th>
+       <th>Tipo</th>
+      </tr>
+     </thead>
+     <tbody>
+      <?php
+			foreach ($rows as $row) {	
+	    ?>
+      <tr>
+       <td class="center"><input tabindex="13" type="checkbox" class="flat-checkbox" id="fc1"></td>
+       <td><?php echo $row['codigo']; ?></td>
+       <td><?php echo $row['nombre']; ?></td>
+       <td><?php echo $row['unidad']; ?></td>
+       <td class="center"><?php echo $row['costoDirecto']; ?></td>
+       <td class="center"><?php echo $row['iva']; ?></td>
+       <td class="center"><?php echo $row['total']; ?></td>
+       <td><?php echo $row['fecha']; ?></td>
+       <td><?php echo $row['empresaProveedora']; ?></td>
+       <td><?php echo $row['tipoRecurso']; ?></td>
+      </tr>
+      <?php } ?>
+     </tbody>
+    </table>
+
         </div>
        </div>
+
       </div>
-     </div>
-    </div>
+
+      
+
+        </div>
+       </div>
     
     <!-- END PAGE CONTENT -->
 
@@ -378,6 +401,37 @@
   <script src="lib/js/typeahead-example.js"></script>
   
   <!-- Adjustable JS -->
+  <script src="lib/js/jquery.dataTables.js"></script>
+  <script src="lib/js/DT_bootstrap.js"></script>
+  <script src="lib/js/soft-widgets.js"></script>
+  <script src="lib/js/icheck.js"></script>
   
+  <script>
+   $(document).ready(function() {
+    $('.datatable').dataTable({
+     "sPaginationType": "bs_full"
+    }); 
+    $('.datatable').each(function(){
+     var datatable = $(this);
+     // SEARCH - Add the placeholder for Search and Turn this into in-line form control
+     var search_input = datatable.closest('.dataTables_wrapper').find('div[id$=_filter] input');
+     search_input.attr('placeholder', 'Buscar');
+     search_input.addClass('form-control input-sm');
+     // LENGTH - Inline-Form control
+     var length_sel = datatable.closest('.dataTables_wrapper').find('div[id$=_length] select');
+     length_sel.addClass('form-control input-sm');
+    });
+   });
+  </script>
+
+  <script>
+   $(document).ready(function() { 
+    $('.flat-checkbox').iCheck({
+     checkboxClass: 'icheckbox_flat-purple',
+     radioClass: 'iradio_flat-purple'
+    });
+   });
+  </script>
+
  </body>
 </html>
